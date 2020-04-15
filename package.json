@@ -1,0 +1,22 @@
+{
+  "name": "@guardian/google-chat-utils",
+  "version": "1.0.0",
+  "description": "Selection of helper function and types to be used with Google Chat bots",
+  "main": "dist/src/index.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guardian/google-chat-utils.git"
+  },
+  "keywords": [
+    "google-chat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guardian/google-chat-utils/issues"
+  },
+  "homepage": "https://github.com/guardian/google-chat-utils#readme"
+}
