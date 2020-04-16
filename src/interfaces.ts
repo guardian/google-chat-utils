@@ -54,7 +54,9 @@ export interface Card {
     title: string;
     imageUrl: string;
   };
-  sections: ({
-    widgets: (KVWidget | ButtonWidget)[];
-  } | null)[];
+  sections: Section[];
+}
+
+export interface Section {
+  widgets: (KVWidget | ButtonWidget)[];
 }

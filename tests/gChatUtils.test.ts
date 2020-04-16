@@ -1,6 +1,6 @@
 import * as src from "../src/gChatUtils";
 import fetch from "node-fetch";
-import { GChatCard } from "../src/interfaces";
+import { Card } from "../src/interfaces";
 
 const FETCH_ERROR = "some error";
 
@@ -17,8 +17,8 @@ jest.mock("node-fetch", () => jest.fn());
 
 describe("gChatUtils", function() {
   describe("gChatKVWidget", function() {
-    test("Creates a key value widget without a website button", () => {
-      const result = src.gChatKVWidget("someLabel", "someContent");
+    it("Creates a key value widget without a website button", () => {
+      const result = src.kvWidget("someLabel", "someContent");
       expect(result).toEqual({
         keyValue: {
           content: "<b>someContent</b>",
@@ -27,8 +27,8 @@ describe("gChatUtils", function() {
         }
       });
     });
-    test("Can optionally add a website link", () => {
-      const result = src.gChatKVWidget("someLabel", "someContent", {
+    it("Can optionally add a website link", () => {
+      const result = src.kvWidget("someLabel", "someContent", {
         website: {
           text: "someWebsite",
           url: "someURL"
@@ -42,8 +42,8 @@ describe("gChatUtils", function() {
       });
     });
 
-    test("Can optionally add a bottom label", () => {
-      const result = src.gChatKVWidget("someLabel", "someContent", {
+    it("Can optionally add a bottom label", () => {
+      const result = src.kvWidget("someLabel", "someContent", {
         bottomLabel: "some bottom label"
       });
       expect(result).toEqual({
@@ -55,7 +55,7 @@ describe("gChatUtils", function() {
   });
 
   describe("sendMessageToChat", () => {
-    test("makes a POST request to a webhook with a body", async () => {
+    it("makes a POST request to a webhook with a body", async () => {
       // @ts-ignore
       fetch.mockImplementationOnce(() => Promise.resolve(new JestMock(200)));
       await src.sendMessageToChat("someURL", "someMessage");
@@ -69,7 +69,7 @@ describe("gChatUtils", function() {
       });
     });
 
-    test("throws error if bad fetch", async () => {
+    it("throws error if bad fetch", async () => {
       // @ts-ignore
       fetch.mockImplementationOnce(() => Promise.resolve(new JestMock(400)));
       try {
@@ -81,11 +81,11 @@ describe("gChatUtils", function() {
   });
 
   describe("sendCardToChat", () => {
-    const dummyCard: GChatCard = {
+    const dummyCard: Card = {
       header: { imageUrl: "someURL", title: "someTitle" },
       sections: []
     };
-    test("makes a POST request to a webhook with a body", async () => {
+    it("makes a POST request to a webhook with a body", async () => {
       // @ts-ignore
       fetch.mockImplementationOnce(() => Promise.resolve(new JestMock(200)));
       await src.sendCardToChat("someURL", dummyCard);
@@ -99,7 +99,7 @@ describe("gChatUtils", function() {
       });
     });
 
-    test("Errors out if not bad response from fetch", async () => {
+    it("Errors out if not bad response from fetch", async () => {
       // @ts-ignore
       fetch.mockImplementationOnce(() => Promise.resolve(new JestMock(404)));
       try {
@@ -107,6 +107,89 @@ describe("gChatUtils", function() {
       } catch (err) {
         expect(err).toEqual(Error(JSON.stringify(FETCH_ERROR)));
       }
+    });
+  });
+
+  describe("card", () => {
+    const kvWidget = src.kvWidget("someLabel", "someContent");
+    it("should produce an object with a header, image and infoWidgets", function() {
+      const params = {
+        title: "someTitle",
+        image: "someImage",
+        infoWidgets: [kvWidget]
+      };
+
+      expect(src.card(params)).toEqual({
+        header: {
+          title: "someTitle",
+          imageUrl: "someImage"
+        },
+        sections: [
+          {
+            widgets: [kvWidget]
+          }
+        ]
+      });
+    });
+
+    it("should have the key value section first", function() {
+      const params = {
+        title: "someTitle",
+        image: "someImage",
+        infoWidgets: [kvWidget]
+      };
+
+      expect(src.card(params).sections[0]).toEqual({
+        widgets: [kvWidget]
+      });
+    });
+
+    it("should add a button if passed in", function() {
+      const button = src.button("someButton", "someURL");
+      const params = {
+        title: "someTitle",
+        image: "someImage",
+        infoWidgets: [kvWidget],
+        buttons: [button]
+      };
+
+      expect(src.card(params).sections[1]).toEqual({
+        widgets: [{ buttons: [button] }]
+      });
+    });
+
+    it("should add an icon if passed in", function() {
+      const icon = src.imageButton("someIconURL", "someURL");
+      const params = {
+        title: "someTitle",
+        image: "someImage",
+        infoWidgets: [kvWidget],
+        icons: [icon]
+      };
+
+      expect(src.card(params).sections[1]).toEqual({
+        widgets: [{ buttons: [icon] }]
+      });
+    });
+
+    it("should have buttons then icons if both are passed in", function() {
+      const button = src.button("someButton", "someURL");
+      const icon = src.imageButton("someIconURL", "someURL");
+      const params = {
+        title: "someTitle",
+        image: "someImage",
+        infoWidgets: [kvWidget],
+        buttons: [button],
+        icons: [icon]
+      };
+
+      expect(src.card(params).sections[1]).toEqual({
+        widgets: [{ buttons: [button] }]
+      });
+
+      expect(src.card(params).sections[2]).toEqual({
+        widgets: [{ buttons: [icon] }]
+      });
     });
   });
 });

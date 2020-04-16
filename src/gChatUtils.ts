@@ -1,9 +1,4 @@
-import {
-  Button,
-  Card,
-  ImageButton,
-  KVWidget
-} from "./interfaces";
+import { Button, Card, ImageButton, KVWidget, Section } from "./interfaces";
 import fetch from "node-fetch";
 
 export const button = (title: string, url: string): Button => ({
@@ -46,20 +41,32 @@ export function kvWidget(
   };
 }
 
-export function card(
-  title: string,
-  image: string,
-  infoWidgets: KVWidget[],
-  buttons: Button[] | null = null,
-  icons: ImageButton[] | null = null
-): Card {
+export function card({
+  title,
+  image,
+  infoWidgets,
+  buttons,
+  icons
+}: {
+  title: string;
+  image: string;
+  infoWidgets: KVWidget[];
+  buttons?: Button[];
+  icons?: ImageButton[];
+}): Card {
+  const sections: Section[] = [{ widgets: infoWidgets }];
+
+  if (buttons) {
+    sections.push({ widgets: [{ buttons }] });
+  }
+
+  if (icons) {
+    sections.push({ widgets: [{ buttons: icons }] });
+  }
+
   return {
     header: { title, imageUrl: image },
-    sections: [
-      { widgets: infoWidgets },
-      buttons ? { widgets: [{ buttons }] } : null,
-      icons ? { widgets: [{ buttons: icons }] } : null
-    ].filter(_ => _ != null)
+    sections
   };
 }
 
