@@ -1,6 +1,6 @@
 {
   "name": "@guardian/google-chat-utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Selection of helper function and types to be used with Google Chat bots",
   "main": "dist/src/gChatUtils.ts",
   "types": "dist/src/gChatUtils.d.ts",
