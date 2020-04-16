@@ -1,10 +1,5 @@
-export interface LambdaResponse {
-  statusCode: number;
-  body: string;
-}
-
 // https://developers.google.com/hangouts/chat/reference/message-formats/cards#keyvalue
-export interface GChatKVWidget {
+export interface KVWidget {
   keyValue: {
     topLabel: string;
     content: string;
@@ -30,14 +25,15 @@ export interface GChatKVWidget {
 }
 
 // https://developers.google.com/hangouts/chat/reference/message-formats/cards#buttons
-export interface GChatButton {
+export interface Button {
   textButton: {
     text: string;
     onClick: { openLink: { url: string } };
   };
 }
 
-export interface GChatImageButton {
+// https://developers.google.com/hangouts/chat/reference/message-formats/cards#buttons
+export interface ImageButton {
   imageButton: {
     iconUrl: string;
     onClick: {
@@ -48,17 +44,17 @@ export interface GChatImageButton {
   };
 }
 
-export interface GChatButtonWidget {
-  buttons: (GChatButton | GChatImageButton)[];
+export interface ButtonWidget {
+  buttons: (Button | ImageButton)[];
 }
 
 // https://developers.google.com/hangouts/chat/reference/message-formats/cards#components
-export interface GChatCard {
+export interface Card {
   header: {
     title: string;
     imageUrl: string;
   };
   sections: ({
-    widgets: (GChatKVWidget | GChatButtonWidget)[];
+    widgets: (KVWidget | ButtonWidget)[];
   } | null)[];
 }

@@ -1,23 +1,23 @@
 import {
-  GChatButton,
-  GChatCard,
-  GChatImageButton,
-  GChatKVWidget
+  Button,
+  Card,
+  ImageButton,
+  KVWidget
 } from "./interfaces";
 import fetch from "node-fetch";
 
-export const gChatButton = (title: string, url: string): GChatButton => ({
+export const button = (title: string, url: string): Button => ({
   textButton: {
     text: title,
     onClick: { openLink: { url } }
   }
 });
 
-export function gChatImageButton(iconUrl: string, url: string) {
+export function imageButton(iconUrl: string, url: string) {
   return { imageButton: { iconUrl, onClick: { openLink: { url } } } };
 }
 
-export function gChatKVWidget(
+export function kvWidget(
   topLabel: string,
   content: string,
   options?: {
@@ -27,7 +27,7 @@ export function gChatKVWidget(
     };
     bottomLabel?: string;
   }
-): GChatKVWidget {
+): KVWidget {
   return {
     keyValue: {
       topLabel,
@@ -46,13 +46,13 @@ export function gChatKVWidget(
   };
 }
 
-export function gChatCard(
+export function card(
   title: string,
   image: string,
-  infoWidgets: GChatKVWidget[],
-  buttons: GChatButton[] | null = null,
-  icons: GChatImageButton[] | null = null
-): GChatCard {
+  infoWidgets: KVWidget[],
+  buttons: Button[] | null = null,
+  icons: ImageButton[] | null = null
+): Card {
   return {
     header: { title, imageUrl: image },
     sections: [
@@ -79,7 +79,7 @@ export async function sendMessageToChat(
 
 export async function sendCardToChat(
   webhook: string,
-  card: GChatCard,
+  card: Card,
   trigger: boolean = true
 ): Promise<void> {
   const params = {
