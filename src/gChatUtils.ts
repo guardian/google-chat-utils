@@ -24,10 +24,11 @@ export function kvWidget(
     bold?: boolean;
   }
 ): KVWidget {
+  const isBold = !options || options?.bold || options?.bold === undefined;
   return {
     keyValue: {
       topLabel,
-      content: options?.bold || !options ? `<b>${content}</b>` : content,
+      content: isBold ? `<b>${content}</b>` : content,
       contentMultiline: "true" as const,
       ...(options?.bottomLabel && { bottomLabel: options.bottomLabel }),
       ...(options?.website && {

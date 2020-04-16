@@ -63,6 +63,11 @@ describe("gChatUtils", function() {
       expect(result.keyValue.content).toEqual("<b>someContent</b>");
     });
 
+    it("Keeps the content bold if options are present but bold is not changed", () => {
+      const result = src.kvWidget("someLabel", "someContent", {});
+      expect(result.keyValue.content).toEqual("<b>someContent</b>");
+    });
+
     it("Sends the content normally if bold is set to false", () => {
       const result = src.kvWidget("someLabel", "someContent", { bold: false });
       expect(result.keyValue.content).toEqual("someContent");
