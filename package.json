@@ -1,6 +1,6 @@
 {
   "name": "@guardian/google-chat-utils",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Selection of helper function and types to be used with Google Chat bots",
   "main": "dist/src/gChatUtils.js",
   "types": "dist/src/gChatUtils.d.ts",
@@ -30,7 +30,9 @@
     "@babel/preset-typescript": "^7.9.0",
     "@types/jest": "^25.2.1",
     "@types/node-fetch": "^2.5.6",
-    "jest": "^25.3.0",
+    "jest": "^25.3.0"
+  },
+  "dependencies": {
     "node-fetch": "^2.6.0",
     "typescript": "^3.8.3"
   }
