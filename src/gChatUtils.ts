@@ -21,12 +21,13 @@ export function kvWidget(
       url: string;
     };
     bottomLabel?: string;
+    bold?: boolean;
   }
 ): KVWidget {
   return {
     keyValue: {
       topLabel,
-      content: `<b>${content}</b>`,
+      content: options?.bold || !options ? `<b>${content}</b>` : content,
       contentMultiline: "true" as const,
       ...(options?.bottomLabel && { bottomLabel: options.bottomLabel }),
       ...(options?.website && {
@@ -44,17 +45,17 @@ export function kvWidget(
 export function card({
   title,
   image,
-  infoWidgets,
+  kvWidgets,
   buttons,
   icons
 }: {
   title: string;
   image: string;
-  infoWidgets: KVWidget[];
+  kvWidgets: KVWidget[];
   buttons?: Button[];
   icons?: ImageButton[];
 }): Card {
-  const sections: Section[] = [{ widgets: infoWidgets }];
+  const sections: Section[] = [{ widgets: kvWidgets }];
 
   if (buttons) {
     sections.push({ widgets: [{ buttons }] });

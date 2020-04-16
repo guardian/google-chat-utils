@@ -52,6 +52,21 @@ describe("gChatUtils", function() {
         })
       });
     });
+
+    it("Makes the content bold by default", () => {
+      const result = src.kvWidget("someLabel", "someContent");
+      expect(result.keyValue.content).toEqual("<b>someContent</b>");
+    });
+
+    it("Keeps the content bold if set explicitly", () => {
+      const result = src.kvWidget("someLabel", "someContent", { bold: true });
+      expect(result.keyValue.content).toEqual("<b>someContent</b>");
+    });
+
+    it("Sends the content normally if bold is set to false", () => {
+      const result = src.kvWidget("someLabel", "someContent", { bold: false });
+      expect(result.keyValue.content).toEqual("someContent");
+    });
   });
 
   describe("sendMessageToChat", () => {
@@ -116,27 +131,27 @@ describe("gChatUtils", function() {
       const params = {
         title: "someTitle",
         image: "someImage",
-        infoWidgets: [kvWidget]
+        kvWidgets: [kvWidget]
       };
 
-      expect(src.card(params)).toEqual({
-        header: {
-          title: "someTitle",
-          imageUrl: "someImage"
-        },
-        sections: [
-          {
-            widgets: [kvWidget]
-          }
-        ]
+      const result = src.card(params);
+
+      expect(result.header).toEqual({
+        title: "someTitle",
+        imageUrl: "someImage"
       });
+      expect(result.sections).toEqual([
+        {
+          widgets: [kvWidget]
+        }
+      ]);
     });
 
     it("should have the key value section first", function() {
       const params = {
         title: "someTitle",
         image: "someImage",
-        infoWidgets: [kvWidget]
+        kvWidgets: [kvWidget]
       };
 
       expect(src.card(params).sections[0]).toEqual({
@@ -149,7 +164,7 @@ describe("gChatUtils", function() {
       const params = {
         title: "someTitle",
         image: "someImage",
-        infoWidgets: [kvWidget],
+        kvWidgets: [kvWidget],
         buttons: [button]
       };
 
@@ -163,7 +178,7 @@ describe("gChatUtils", function() {
       const params = {
         title: "someTitle",
         image: "someImage",
-        infoWidgets: [kvWidget],
+        kvWidgets: [kvWidget],
         icons: [icon]
       };
 
@@ -178,7 +193,7 @@ describe("gChatUtils", function() {
       const params = {
         title: "someTitle",
         image: "someImage",
-        infoWidgets: [kvWidget],
+        kvWidgets: [kvWidget],
         buttons: [button],
         icons: [icon]
       };
