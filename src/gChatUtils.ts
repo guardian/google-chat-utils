@@ -70,7 +70,6 @@ export function card({
   };
 }
 
-// TODO Make this a public module
 export async function sendMessageToChat(
   webhook: string,
   message: string
