@@ -56,19 +56,13 @@ export function card({
   buttons?: Button[];
   icons?: ImageButton[];
 }): Card {
-  const sections: Section[] = [{ widgets: kvWidgets }];
-
-  if (buttons) {
-    sections.push({ widgets: [{ buttons }] });
-  }
-
-  if (icons) {
-    sections.push({ widgets: [{ buttons: icons }] });
-  }
-
   return {
     header: { title, imageUrl: image },
-    sections
+    sections: [
+      { widgets: kvWidgets },
+      ...(buttons ? [{ widgets: [{ buttons }] }] : []),
+      ...(icons ? [{ widgets: [{ buttons: icons }] }] : [])
+    ]
   };
 }
 
