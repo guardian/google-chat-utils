@@ -72,6 +72,16 @@ describe("gChatUtils", function() {
       const result = src.kvWidget("someLabel", "someContent", { bold: false });
       expect(result.keyValue.content).toEqual("someContent");
     });
+
+    it("Defaults the content field to 'Missing field' if given undefined", () => {
+      const result = src.kvWidget("someLabel", undefined, { bold: false });
+      expect(result.keyValue.content).toEqual("Missing field");
+    });
+
+    it("Defaults the content field to 'Missing field' if given an empty string", () => {
+      const result = src.kvWidget("someLabel", "", { bold: false });
+      expect(result.keyValue.content).toEqual("Missing field");
+    });
   });
 
   describe("sendMessageToChat", () => {

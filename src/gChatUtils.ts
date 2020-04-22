@@ -14,7 +14,7 @@ export function imageButton(iconUrl: string, url: string) {
 
 export function kvWidget(
   topLabel: string,
-  content: string,
+  content: string | undefined,
   options?: {
     website?: {
       text: string;
@@ -24,11 +24,17 @@ export function kvWidget(
     bold?: boolean;
   }
 ): KVWidget {
+  const contentIsText = typeof content === "string" && !!content.trim();
   const isBold = !options || options?.bold || options?.bold === undefined;
   return {
     keyValue: {
       topLabel,
-      content: isBold ? `<b>${content}</b>` : content,
+      content:
+        !!content && contentIsText
+          ? isBold
+            ? `<b>${content}</b>`
+            : content
+          : "Missing field",
       contentMultiline: "true" as const,
       ...(options?.bottomLabel && { bottomLabel: options.bottomLabel }),
       ...(options?.website && {
