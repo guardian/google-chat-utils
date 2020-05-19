@@ -222,4 +222,64 @@ describe("gChatUtils", function() {
       });
     });
   });
+
+  describe("threadKey", () => {
+    test("Creates an identical thread key for two events which occur on the same day and relate to the same identifier", () => {
+      const firstThreadKey: string = src.threadKey(
+        "my-identifier-name",
+        new Date(2020, 4, 13, 8, 31)
+      );
+      const secondThreadKey: string = src.threadKey(
+        "my-identifier-name",
+        new Date(2020, 4, 13, 9, 22)
+      );
+      expect(firstThreadKey).toBe(secondThreadKey);
+    });
+
+    test("Creates a different thread key for two events which occur on the same day but relate to different identifiers", () => {
+      const firstThreadKey: string = src.threadKey(
+        "my-identifier-name",
+        new Date(2020, 4, 13, 8, 31)
+      );
+      const secondThreadKey: string = src.threadKey(
+        "different-identifier-name",
+        new Date(2020, 4, 13, 9, 22)
+      );
+      expect(firstThreadKey).not.toBe(secondThreadKey);
+    });
+
+    test("Creates a different thread key for two events which occur on different days and relate to the same identifier", () => {
+      const firstThreadKey: string = src.threadKey(
+        "my-identifier-name",
+        new Date(2020, 4, 13, 8, 31)
+      );
+      const secondThreadKey: string = src.threadKey(
+        "my-identifier-name",
+        new Date(2020, 4, 12, 9, 22)
+      );
+      expect(firstThreadKey).not.toBe(secondThreadKey);
+    });
+
+    test("Encodes special characters from the identifier name correctly", () => {
+      const actual: string = src.threadKey(
+        "My Identifier Name &?",
+        new Date(2020, 4, 13, 8, 31)
+      );
+      expect(actual).toBe("My%20Identifier%20Name%20%26%3F-2020-05-13");
+    });
+  });
+
+  describe("urlWithThreadKey", () => {
+    it("should provide a url with a thread key param", function () {
+      const url = "https://foo.com"
+      const threadKey = "my-thread-key"
+      expect(src.urlWithThreadKey(threadKey, url)).toEqual("https://foo.com&threadKey=my-thread-key")
+    });
+
+    it("should deal with special characters correctly", function () {
+      const url = "https://foo.com"
+      const threadKey = "my thread key with spaces and $ymbols"
+      expect(src.urlWithThreadKey(src.threadKey(threadKey), url)).toEqual("https://foo.com&threadKey=my%20thread%20key%20with%20spaces%20and%20%24ymbols-2020-05-18")
+    });
+  });
 });

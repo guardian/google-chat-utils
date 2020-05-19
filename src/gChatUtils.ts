@@ -1,4 +1,4 @@
-import { Button, Card, ImageButton, KVWidget, Section } from "./interfaces";
+import { Button, Card, ImageButton, KVWidget } from "./interfaces";
 import fetch from "node-fetch";
 
 export const button = (title: string, url: string): Button => ({
@@ -107,4 +107,18 @@ export async function checkForBadResponse(response: {
     const json = await response.json();
     throw new Error(await JSON.stringify(json));
   }
+}
+
+// https://developers.google.com/hangouts/chat/reference/rest/v1/spaces.messages/create#query-parameters
+export function threadKey(
+  identifier: string,
+  currentDateTime: Date = new Date()
+): string {
+  return encodeURIComponent(
+    `${identifier}-${currentDateTime.toISOString().split("T")[0]}`
+  );
+}
+
+export function urlWithThreadKey(threadKey: string, webhook: string): string {
+  return `${webhook}&threadKey=${threadKey}`;
 }
