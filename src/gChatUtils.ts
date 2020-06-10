@@ -74,12 +74,16 @@ export function card({
 
 export async function sendMessageToChat(
   webhook: string,
-  message: string
+  message: string,
+  fallbackText?: string
 ): Promise<void> {
   const params = {
     method: "POST",
     headers: { Accept: "application/json", "Content-Type": "application/json" },
-    body: JSON.stringify({ text: message })
+    body: JSON.stringify({
+      text: message,
+      ...(fallbackText && { fallbackText })
+    })
   };
   const response = await fetch(webhook, params);
   await checkForBadResponse(response);
@@ -88,12 +92,17 @@ export async function sendMessageToChat(
 export async function sendCardToChat(
   webhook: string,
   card: Card,
-  trigger: boolean = true
+  trigger: boolean = true,
+  fallbackText?: string
 ): Promise<void> {
   const params = {
     method: "POST",
     headers: { Accept: "application/json", "Content-Type": "application/json" },
-    body: JSON.stringify({ cards: [card], text: trigger ? "<users/all>" : "" })
+    body: JSON.stringify({
+      cards: [card],
+      text: trigger ? "<users/all>" : "",
+      ...(fallbackText && { fallbackText })
+    })
   };
   const response = await fetch(webhook, params);
   await checkForBadResponse(response);

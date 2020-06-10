@@ -118,14 +118,23 @@ describe("gChatUtils", function() {
     it("makes a POST request to a webhook with a body", async () => {
       // @ts-ignore
       fetch.mockImplementationOnce(() => Promise.resolve(new JestMock(200)));
-      await src.sendCardToChat("someURL", dummyCard);
+      await src.sendCardToChat(
+        "someURL",
+        dummyCard,
+        true,
+        "some-fallback-text"
+      );
       expect(fetch).toHaveBeenCalledWith("someURL", {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ cards: [dummyCard], text: "<users/all>" })
+        body: JSON.stringify({
+          cards: [dummyCard],
+          text: "<users/all>",
+          fallbackText: "some-fallback-text"
+        })
       });
     });
 
@@ -270,16 +279,25 @@ describe("gChatUtils", function() {
   });
 
   describe("urlWithThreadKey", () => {
-    it("should provide a url with a thread key param", function () {
-      const url = "https://foo.com"
-      const threadKey = "my-thread-key"
-      expect(src.urlWithThreadKey(threadKey, url)).toEqual("https://foo.com&threadKey=my-thread-key")
+    it("should provide a url with a thread key param", function() {
+      const url = "https://foo.com";
+      const threadKey = "my-thread-key";
+      expect(src.urlWithThreadKey(threadKey, url)).toEqual(
+        "https://foo.com&threadKey=my-thread-key"
+      );
     });
 
-    it("should deal with special characters correctly", function () {
-      const url = "https://foo.com"
-      const threadKey = "my thread key with spaces and $ymbols"
-      expect(src.urlWithThreadKey(src.threadKey(threadKey), url)).toEqual("https://foo.com&threadKey=my%20thread%20key%20with%20spaces%20and%20%24ymbols-2020-05-18")
+    it("should deal with special characters correctly", function() {
+      const url = "https://foo.com";
+      const threadKey = "my thread key with spaces and $ymbols";
+      expect(
+        src.urlWithThreadKey(
+          src.threadKey(threadKey, new Date(2001, 0, 1)),
+          url
+        )
+      ).toEqual(
+        "https://foo.com&threadKey=my%20thread%20key%20with%20spaces%20and%20%24ymbols-2001-01-01"
+      );
     });
   });
 });
