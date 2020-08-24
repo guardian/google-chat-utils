@@ -1,3 +1,51 @@
+export interface ButtonParams {
+  title: string;
+  url: string;
+}
+
+export interface ImageButtonParams {
+  iconUrl: string;
+  url: string;
+}
+
+export interface CardParams {
+  title: string;
+  image: string;
+  kvWidgets: KVWidget[];
+  buttons?: Button[];
+  icons?: ImageButton[];
+}
+
+export interface SendMessageParams {
+  webhook: string;
+  message: string;
+  fallbackText?: string;
+}
+
+export interface KVWidgetParams {
+  header: string;
+  footer?: string;
+  content: string;
+  website?: {
+    text: string;
+    url: string;
+  };
+  bold?: boolean;
+}
+
+export interface SendCardsParams {
+  webhook: string;
+  cards: Card[];
+  trigger: boolean;
+  fallbackText?: string;
+}
+
+export interface ThreadKeyParams {
+  identifier: string;
+  groupBy?: string | number;
+  groupByDate?: boolean;
+}
+
 // https://developers.google.com/hangouts/chat/reference/message-formats/cards#keyvalue
 export interface KVWidget {
   keyValue: {
