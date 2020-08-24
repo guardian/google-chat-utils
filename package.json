@@ -8,6 +8,7 @@
     "test": "jest ./tests/*",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",
+    "preversion": "npm test",
     "postversion": "git push && git push --tags",
     "build": "tsc"
   },
