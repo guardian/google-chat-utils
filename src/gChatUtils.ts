@@ -1,47 +1,50 @@
-import { Button, Card, ImageButton, KVWidget } from "./interfaces";
+import {
+  Button,
+  ButtonParams,
+  Card,
+  CardParams,
+  ImageButtonParams,
+  KVWidget,
+  KVWidgetParams,
+  SendCardsParams,
+  SendMessageParams,
+  ThreadKeyParams
+} from "./interfaces";
 import fetch from "node-fetch";
 
-export const button = (title: string, url: string): Button => ({
+export const button = (params: ButtonParams): Button => ({
   textButton: {
-    text: title,
-    onClick: { openLink: { url } }
+    text: params.title,
+    onClick: { openLink: { url: params.url } }
   }
 });
 
-export function imageButton(iconUrl: string, url: string) {
-  return { imageButton: { iconUrl, onClick: { openLink: { url } } } };
+export function imageButton(params: ImageButtonParams) {
+  return {
+    imageButton: {
+      iconUrl: params.iconUrl,
+      onClick: { openLink: { url: params.url } }
+    }
+  };
 }
 
-export function kvWidget(
-  topLabel: string,
-  content: string | undefined,
-  options?: {
-    website?: {
-      text: string;
-      url: string;
-    };
-    bottomLabel?: string;
-    bold?: boolean;
-  }
-): KVWidget {
-  const contentIsText = typeof content === "string" && !!content.trim();
-  const isBold = !options || options?.bold || options?.bold === undefined;
+export function kvWidget({ bold = true, ...params }: KVWidgetParams): KVWidget {
+  const contentIsNotEmpty = !!params.content?.trim();
   return {
     keyValue: {
-      topLabel,
-      content:
-        !!content && contentIsText
-          ? isBold
-            ? `<b>${content}</b>`
-            : content
-          : "Missing field",
-      contentMultiline: "true" as const,
-      ...(options?.bottomLabel && { bottomLabel: options.bottomLabel }),
-      ...(options?.website && {
+      topLabel: params.header,
+      content: contentIsNotEmpty
+        ? bold
+          ? `<b>${params.content}</b>`
+          : params.content
+        : "Missing field",
+      contentMultiline: "true",
+      ...(params.footer && { bottomLabel: params.footer }),
+      ...(params.website && {
         button: {
           textButton: {
-            text: options.website.text,
-            onClick: { openLink: { url: options.website.url } }
+            text: params.website.text,
+            onClick: { openLink: { url: params.website.url } }
           }
         }
       })
@@ -55,13 +58,7 @@ export function card({
   kvWidgets,
   buttons,
   icons
-}: {
-  title: string;
-  image: string;
-  kvWidgets: KVWidget[];
-  buttons?: Button[];
-  icons?: ImageButton[];
-}): Card {
+}: CardParams): Card {
   return {
     header: { title, imageUrl: image },
     sections: [
@@ -73,38 +70,31 @@ export function card({
 }
 
 export async function sendMessageToChat(
-  webhook: string,
-  message: string,
-  fallbackText?: string
+  params: SendMessageParams
 ): Promise<void> {
-  const params = {
+  const fetchParams = {
     method: "POST",
     headers: { Accept: "application/json", "Content-Type": "application/json" },
     body: JSON.stringify({
-      text: message,
-      ...(fallbackText && { fallbackText })
+      text: params.message,
+      ...(params.fallbackText && { fallbackText: params.fallbackText })
     })
   };
-  const response = await fetch(webhook, params);
+  const response = await fetch(params.webhook, fetchParams);
   await checkForBadResponse(response);
 }
 
-export async function sendCardToChat(
-  webhook: string,
-  card: Card,
-  trigger: boolean = true,
-  fallbackText?: string
-): Promise<void> {
-  const params = {
+export async function sendCardsToChat(params: SendCardsParams): Promise<void> {
+  const fetchParams = {
     method: "POST",
     headers: { Accept: "application/json", "Content-Type": "application/json" },
     body: JSON.stringify({
-      cards: [card],
-      text: trigger ? "<users/all>" : "",
-      ...(fallbackText && { fallbackText })
+      cards: params.cards,
+      text: params.trigger ? "<users/all>" : "",
+      ...(params.fallbackText && { fallbackText: params.fallbackText })
     })
   };
-  const response = await fetch(webhook, params);
+  const response = await fetch(params.webhook, fetchParams);
   await checkForBadResponse(response);
 }
 
@@ -119,15 +109,18 @@ export async function checkForBadResponse(response: {
 }
 
 // https://developers.google.com/hangouts/chat/reference/rest/v1/spaces.messages/create#query-parameters
-export function threadKey(
-  identifier: string,
-  currentDateTime: Date = new Date()
-): string {
-  return encodeURIComponent(
-    `${identifier}-${currentDateTime.toISOString().split("T")[0]}`
-  );
+export function threadKey(params: ThreadKeyParams): string {
+  const identifier = params.groupByDate
+    ? yearMonthDay(new Date())
+    : params.groupBy ?? "";
+
+  return encodeURIComponent(`${params.identifier}-${identifier}`);
 }
 
 export function urlWithThreadKey(threadKey: string, webhook: string): string {
   return `${webhook}&threadKey=${threadKey}`;
+}
+
+export function yearMonthDay(date: Date): string {
+  return date.toISOString().split("T")[0];
 }

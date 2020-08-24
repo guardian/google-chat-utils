@@ -1,6 +1,6 @@
 {
   "name": "@guardian/google-chat-utils",
-  "version": "1.0.10",
+  "version": "2.0.0",
   "description": "Selection of helper function and types to be used with Google Chat bots",
   "main": "dist/src/gChatUtils.js",
   "types": "dist/src/gChatUtils.d.ts",
@@ -8,6 +8,7 @@
     "test": "jest ./tests/*",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",
+    "preversion": "npm test",
     "postversion": "git push && git push --tags",
     "build": "tsc"
   },
@@ -34,5 +35,10 @@
   "dependencies": {
     "node-fetch": "^2.6.0",
     "typescript": "^3.8.3"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
   }
 }
