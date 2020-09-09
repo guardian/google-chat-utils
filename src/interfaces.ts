@@ -23,8 +23,9 @@ export interface SendMessageParams {
 }
 
 export interface KVWidgetParams {
-  header: string;
+  header?: string;
   footer?: string;
+  onClick?: { openLink: { url: string } };
   content: string;
   website?: {
     text: string;
@@ -49,15 +50,11 @@ export interface ThreadKeyParams {
 // https://developers.google.com/hangouts/chat/reference/message-formats/cards#keyvalue
 export interface KVWidget {
   keyValue: {
-    topLabel: string;
+    topLabel?: string;
     content: string;
     contentMultiline?: "true" | "false";
     bottomLabel?: string;
-    onClick?: {
-      openLink: {
-        url: string;
-      };
-    };
+    onClick?: { openLink: { url: string } };
     icon?: string;
     button?: {
       textButton: {

@@ -32,13 +32,13 @@ export function kvWidget({ bold = true, ...params }: KVWidgetParams): KVWidget {
   const contentIsNotEmpty = !!params.content?.trim();
   return {
     keyValue: {
-      topLabel: params.header,
       content: contentIsNotEmpty
         ? bold
           ? `<b>${params.content}</b>`
           : params.content
         : "Missing field",
       contentMultiline: "true",
+      ...(params.header && { topLabel: params.header }),
       ...(params.footer && { bottomLabel: params.footer }),
       ...(params.website && {
         button: {
