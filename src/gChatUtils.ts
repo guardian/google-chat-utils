@@ -40,6 +40,11 @@ export function kvWidget({ bold = true, ...params }: KVWidgetParams): KVWidget {
       contentMultiline: "true",
       ...(params.header && { topLabel: params.header }),
       ...(params.footer && { bottomLabel: params.footer }),
+      ...(params.onClickUrl && {
+        onClick: {
+          openLink: { url: params.onClickUrl }
+        }
+      }),
       ...(params.website && {
         button: {
           textButton: {

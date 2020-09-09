@@ -25,7 +25,7 @@ export interface SendMessageParams {
 export interface KVWidgetParams {
   header?: string;
   footer?: string;
-  onClick?: { openLink: { url: string } };
+  onClickUrl?: string;
   content: string;
   website?: {
     text: string;
