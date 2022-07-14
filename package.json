@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.7"
   },
   "jest": {
     "modulePathIgnorePatterns": [
