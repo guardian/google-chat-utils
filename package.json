@@ -1,15 +1,11 @@
 {
   "name": "@guardian/google-chat-utils",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Selection of helper function and types to be used with Google Chat bots",
   "main": "dist/src/gChatUtils.js",
   "types": "dist/src/gChatUtils.d.ts",
   "scripts": {
     "test": "jest ./tests/*",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm test",
-    "preversion": "npm test",
-    "postversion": "git push && git push --tags",
     "build": "tsc"
   },
   "repository": {
