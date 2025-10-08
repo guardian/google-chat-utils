@@ -2,7 +2,7 @@ name: Publish
 
 on:
   release:
-    types: [published]
+    types: [published, prereleased]
 
 permissions:
   id-token: write
@@ -22,4 +22,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-      - run: npm publish --tag ${{ github.event.release.tag_name }}
+      - run: npm publish --tag beta
+        if: "github.event.release.prerelease"
+      - run: npm publish
+        if: "!github.event.release.prerelease"
